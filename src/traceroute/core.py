@@ -29,6 +29,7 @@ Core module
 
 import socket
 import random
+import struct
 
 __all__ = ['Tracer']
 
@@ -72,7 +73,7 @@ class Tracer(object):
         print(text)
 
         while True:
-            receiver = self.create_receiver() 
+            receiver = self.create_receiver()
             sender = self.create_sender()
             sender.sendto(b'', (self.dst, self.port))
 
@@ -80,19 +81,22 @@ class Tracer(object):
             try:
                 data, addr = receiver.recvfrom(1024)
             except socket.error:
-                raise IOError('Socket error: {}'.format(e))
+                pass
+                # raise IOError('Socket error: {}'.format(e))
             finally:
-                receiver.close()                
+                receiver.close()
                 sender.close()
 
             if addr:
                 print('{:<4} {}'.format(self.ttl, addr[0]))
+                if addr[0] == dst_ip:
+                    break
             else:
                 print('{:<4} *'.format(self.ttl))
 
             self.ttl += 1
 
-            if addr[0] == dst_ip or self.ttl > self.hops:
+            if self.ttl > self.hops:
                 break
 
     def create_receiver(self):
@@ -111,6 +115,9 @@ class Tracer(object):
             type=socket.SOCK_RAW,
             proto=socket.IPPROTO_ICMP
         )
+
+        timeout = struct.pack("ll", 5, 0)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, timeout)
 
         try:
             s.bind(('', self.port))
