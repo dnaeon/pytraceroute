@@ -63,7 +63,7 @@ class Tracer(object):
         try:
             dst_ip = socket.gethostbyname(self.dst)
         except socket.error as e:
-            raise IOError('Unable to resolve {}: {}', self.dst, e)
+            raise IOError('Unable to resolve {}: {}'.format(self.dst, e))
 
         text = 'traceroute to {} ({}), {} hops max'.format(
             self.dst,
