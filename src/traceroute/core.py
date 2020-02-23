@@ -63,7 +63,7 @@ class Tracer(object):
         try:
             dst_ip = socket.gethostbyname(self.dst)
         except socket.error as e:
-            raise IOError('Unable to resolve {}: {}', self.dst, e)
+            raise IOError('Unable to resolve {}: {}'.format(self.dst, e))
 
         text = 'traceroute to {} ({}), {} hops max'.format(
             self.dst,
@@ -92,7 +92,7 @@ class Tracer(object):
 
             if addr:
                 timeCost = round((entTimer - startTimer) * 1000, 2)
-                print('{:<4} {} {} ms'.format(self.ttl, addr[0]), timeCost)
+                print('{:<4} {} {} ms'.format(self.ttl, addr[0], timeCost))
                 if addr[0] == dst_ip:
                     break
             else:
