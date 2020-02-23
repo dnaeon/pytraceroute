@@ -92,7 +92,7 @@ class Tracer(object):
 
             if addr:
                 timeCost = round((entTimer - startTimer) * 1000, 2)
-                print('{:<4} {} {} ms'.format(self.ttl, addr[0]), timeCost)
+                print('{:<4} {} {} ms'.format(self.ttl, addr[0], timeCost))
                 if addr[0] == dst_ip:
                     break
             else:
